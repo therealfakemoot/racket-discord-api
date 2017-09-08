@@ -1,232 +1,150 @@
 #lang racket/base
 
+(provide EndpointStatus EndpointSm EndpointSmActive EndpointSmUpcoming)
+(provide EndpointDiscord EndpointAPI EndpointGuilds EndpointChannels
+         EndpointUsers EndpointGateway EndpointGatewayBot EndpointWebhooks)
+(provide EndpointCDN EndpointCDNAttachments EndpointCDNAvatars EndpointCDNIcons
+         EndpointCDNSplashes EndpointCDNChannelIcons)
+(provide EndpointAuth EndpointLogin EndpointLogout EndpointVerify
+         EndpointVerifyResend EndpointForgotPassword EndpointResetPassword
+         EndpointRegister)
+(provide EndpointVoice EndpointVoiceRegions EndpointVoiceIce)
+(provide EndpointTutorial EndpointTutorialIndicators)
+(provide EndpointTrack EndpointSso EndpointReport EndpointIntegrations)
+(provide EndpointUser EndpointUserAvatar EndpointUserAvatarAnimated
+         EndpointUserSettings EndpointUserGuild EndpointUserGuilds
+         EndpointUserGuildSettings EndpointUserChannels EndpointUserDevices
+         EndpointUserConnections EndpointUserNotes)
+(provide EndpointGuild EndpointGuildChannels EndpointGuildMember
+         EndpointGuildMembers EndpointGuildMemberRole EndpointGuildBan
+         EndpointGuildBans EndpointGuildIntegration EndpointGuildIntegrations
+         EndpointGuildIntegrationSync EndpointGuildRole EndpointGuildRoles
+         EndpointGuildInvites EndpointGuildEmbed EndpointGuildPrune
+         EndpointGuildIcon EndpointGuildSplash EndpointGuildWebhooks)
+(provide EndpointChannel EndpointChannelPermission EndpointChannelPermissions
+         EndpointChannelInvites EndpointChannelTyping EndpointChannelMessage
+         EndpointChannelMessages EndpointChannelMessageAck
+         EndpointChannelMessagesBulkDelete EndpointChannelMessagePin
+         EndpointChannelMessagesPins EndpointChannelWebhooks)
+(provide EndpointGroupIcon)
+(provide EndpointWebhook EndpointWebhookToken)
+(provide EndpointMessageReactionsAll EndpointMessageReactions
+         EndpointMessageReaction)
+(provide EndpointRelationships EndpointRelationshipsMutual EndpointRelationship)
+(provide EndpointInvite)
+(provide EndpointIntegrationsJoin)
+(provide EndpointEmoji)
+(provide EndpointOauth2 EndpointApplications EndpointApplicationsBot
+         EndpointApplication)
+
 (define APIVersion "6")
 
-(struct Endpoint
-  (Status
-   Sm
-   SmActive
-   SmUpcoming
+(define EndpointStatus                           "https://status.discordapp.com/api")
+(define EndpointSm                               (string-append EndpointStatus "scheduled-maintenances/"))
+(define EndpointSmActive                         (string-append EndpointSm     "active.json"))
+(define EndpointSmUpcoming                       (string-append EndpointSm     "upcoming.json"))
 
-   Discord
-   API
-   Guilds
-   Channels
-   Users
-   Gateway
-   GatewayBot
-   Webhooks
+(define EndpointDiscord                          "https://discordapp.com/")
+(define EndpointAPI                              (string-append EndpointDiscord "api/v" APIVersion "/"))
+(define EndpointGuilds                           (string-append EndpointAPI     "guilds/"))
+(define EndpointChannels                         (string-append EndpointAPI     "channels/"))
+(define EndpointUsers                            (string-append EndpointAPI     "users/"))
+(define EndpointGateway                          (string-append EndpointAPI     "gateway"))
+(define EndpointGatewayBot                       (string-append EndpointGateway "/bot"))
+(define EndpointWebhooks                         (string-append EndpointAPI     "webhooks/"))
 
-   CDN
-   CDNAttachments
-   CDNAvatars
-   CDNIcons
-   CDNSplashes
-   CDNChannelIcons
+(define EndpointCDN                              "https://cdn.discordapp.com/")
+(define EndpointCDNAttachments                   (string-append EndpointCDN "attachments/"))
+(define EndpointCDNAvatars                       (string-append EndpointCDN "avatars/"))
+(define EndpointCDNIcons                         (string-append EndpointCDN "icons/"))
+(define EndpointCDNSplashes                      (string-append EndpointCDN "splashes/"))
+(define EndpointCDNChannelIcons                  (string-append EndpointCDN "channel-icons/"))
 
-   Auth
-   Login
-   Logout
-   Verify
-   VerifyResend
-   ForgotPassword
-   ResetPassword
-   Register
+(define EndpointAuth                             (string-append EndpointAPI  "auth/"))
+(define EndpointLogin                            (string-append EndpointAuth "login"))
+(define EndpointLogout                           (string-append EndpointAuth "logout"))
+(define EndpointVerify                           (string-append EndpointAuth "verify"))
+(define EndpointVerifyResend                     (string-append EndpointAuth "verify/resend"))
+(define EndpointForgotPassword                   (string-append EndpointAuth "forgot"))
+(define EndpointResetPassword                    (string-append EndpointAuth "reset"))
+(define EndpointRegister                         (string-append EndpointAuth "register"))
 
-   Voice
-   VoiceRegions
-   VoiceIce
+(define EndpointVoice                            (string-append EndpointAPI   "/voice/"))
+(define EndpointVoiceRegions                     (string-append EndpointVoice "regions"))
+(define EndpointVoiceIce                         (string-append EndpointVoice "ice"))
 
-   Tutorial
-   TutorialIndicators
+(define EndpointTutorial                         (string-append EndpointAPI      "tutorial/"))
+(define EndpointTutorialIndicators               (string-append EndpointTutorial "indicators"))
 
-   Track
-   Sso
-   Report
-   Integrations
+(define EndpointTrack                            (string-append EndpointAPI  "track"))
+(define EndpointSso                              (string-append EndpointAPI  "sso"))
+(define EndpointReport                           (string-append EndpointAPI "report"))
+(define EndpointIntegrations                     (string-append EndpointAPI "integrations"))
 
-   User
-   UserAvatar
-   UserAvatarAnimated
-   UserSettings
-   UserGuilds
-   UserGuild
-   UserGuildSettings
-   UserChannels
-   UserDevices
-   UserConnections
-   UserNotes
+(define (EndpointUser uID)                       (string-append EndpointUsers uID))
+(define (EndpointUserAvatar uID aID)             (string-append EndpointCDNAvatars uID "/" aID ".png"))
+(define (EndpointUserAvatarAnimated uID aID)     (string-append EndpointCDNAvatars uID "/" aID ".gif"))
+(define (EndpointUserSettings uID)               (string-append EndpointUsers uID "/settings"))
+(define (EndpointUserGuilds uID)                 (string-append EndpointUsers uID "/guilds"))
+(define (EndpointUserGuild uID gID)              (string-append EndpointUsers uID "/guilds/" gID))
+(define (EndpointUserGuildSettings uID gID)      (string-append EndpointUsers uID "/guilds/" gID "/settings"))
+(define (EndpointUserChannels uID)               (string-append EndpointUsers uID "/channels"))
+(define (EndpointUserDevices uID)                (string-append EndpointUsers uID "/devices"))
+(define (EndpointUserConnections uID)            (string-append EndpointUsers uID "/connections"))
+(define (EndpointUserNotes uID)                  (string-append EndpointUsers "@me/notes" uID))
 
-   Guild
-   GuildChannels
-   GuildMembers
-   GuildMember
-   GuildMemberRole
-   GuildBans
-   GuildBan
-   GuildIntegrations
-   GuildIntegration
-   GuildIntegrationSync
-   GuildRoles
-   GuildRole
-   GuildInvites
-   GuildEmbed
-   GuildPrune
-   GuildIcon
-   GuildSplash
-   GuildWebhooks
+(define (EndpointGuild gID)                      (string-append EndpointGuilds gID))
+(define (EndpointGuildChannels gID)              (string-append EndpointGuilds gID "/channels"))
+(define (EndpointGuildMembers gID)               (string-append EndpointGuilds gID "/members"))
+(define (EndpointGuildMember gID uID)            (string-append EndpointGuilds gID "/members/" uID))
+(define (EndpointGuildMemberRole gID uID rID)    (string-append EndpointGuilds gID "/members/" uID "/roles/" rID))
+(define (EndpointGuildBans gID)                  (string-append EndpointGuilds gID "/bans"))
+(define (EndpointGuildBan gID uID)               (string-append EndpointGuilds gID "/bans/" uID))
+(define (EndpointGuildIntegrations gID)          (string-append EndpointGuilds gID "/integrations"))
+(define (EndpointGuildIntegration gID iID)       (string-append EndpointGuilds gID "/integrations/" iID))
+(define (EndpointGuildIntegrationSync gID iID)   (string-append EndpointGuilds gID "/integrations/" iID "/sync"))
+(define (EndpointGuildRoles gID)                 (string-append EndpointGuilds gID "/roles"))
+(define (EndpointGuildRole gID rID)              (string-append EndpointGuilds gID "/roles/" rID))
+(define (EndpointGuildInvites gID)               (string-append EndpointGuilds gID "/invites"))
+(define (EndpointGuildEmbed gID)                 (string-append EndpointGuilds gID "/embed"))
+(define (EndpointGuildPrune gID)                 (string-append EndpointGuilds gID "/prune"))
+(define (EndpointGuildIcon gID)                  (string-append EndpointCDNIcons gID "/" hash ".png"))
+(define (EndpointGuildSplash gID)                (string-append EndpointCDNSplashes gID "/" hash ".png"))
+(define (EndpointGuildWebhooks gID)              (string-append EndpointGuilds gID "/webhooks"))
 
-   Channel
-   ChannelPermissions
-   ChannelPermission
-   ChannelInvites
-   ChannelTyping
-   ChannelMessages
-   ChannelMessage
-   ChannelMessageAck
-   ChannelMessagesBulkDelete
-   ChannelMessagesPins
-   ChannelMessagePin
-   ChannelWebhooks
+(define (EndpointChannel cID)                    (string-append EndpointChannels cID))
+(define (EndpointChannelPermissions cID)         (string-append EndpointChannels cID "/permissions"))
+(define (EndpointChannelPermission cID tID)      (string-append EndpointChannels cID "/permissions/" tID))
+(define (EndpointChannelInvites cID)             (string-append EndpointChannels cID "/invites"))
+(define (EndpointChannelTyping cID)              (string-append EndpointChannels cID "/typing"))
+(define (EndpointChannelMessages cID)            (string-append EndpointChannels cID "/messages"))
+(define (EndpointChannelMessage cID mID)         (string-append EndpointChannels cID "/messages/" mID))
+(define (EndpointChannelMessageAck cID mID)      (string-append EndpointChannels cID "/messages/" mID "/ack"))
+(define (EndpointChannelMessagesBulkDelete cID)  (string-append (EndpointChannel cID) "/messages/bulk_delete"))
+(define (EndpointChannelMessagesPins cID)        (string-append (EndpointChannel cID) "/pins"))
+(define (EndpointChannelMessagePin cID mID)      (string-append (EndpointChannel cID) "/pins/" mID))
+(define (EndpointChannelWebhooks cID)            (string-append (EndpointChannel cID) "/webhooks"))
 
-   GroupIcon
+(define (EndpointGroupIcon cID hash)             (string-append EndpointCDNChannelIcons cID "/" hash ".png"))
 
-   Webhook
-   WebhookToken
+(define (EndpointWebhook wID)                    (string-append EndpointWebhooks wID))
+(define (EndpointWebhookToken wID token)         (string-append EndpointWebhooks wID "/" token))
 
-   MessageReactions
-   MessageReaction
+(define (EndpointMessageReactionsAll cID mID)    (string-append (EndpointChannelMessage cID mID) "/reactions"))
+(define (EndpointMessageReactions cID mID eID)   (string-append (EndpointChannelMessage cID mID) "/reactions" eID))
+(define (EndpointMessageReaction cID mID eID uID)(string-append (EndpointMessageReactions cID mID eID) "/" uID))
 
-   Relationships
-   RelationshipsMutual
-   Relationship
+(define EndpointRelationships                    (string-append EndpointUsers "@me" "/relationships"))
+(define (EndpointRelationshipsMutual uID)        (string-append EndpointUsers uID "/relationships"))
+(define (EndpointRelationship uID)               (string-append (EndpointRelationships) "/" uID))
 
-   Invite
+(define (EndpointInvite iID)                     (string-append EndpointAPI "invite/" iID))
 
-   IntegrationsJoin
+(define (EndpointIntegrationsJoin iID)           (string-append EndpointAPI "integrations/" iID "/join"))
 
-   Emoji
+(define (EndpointEmoji eID)                      (string-append EndpointAPI "emojis/" eID ".png"))
 
-   Oauth2
-
-   Applications
-   ApplicationsBot
-   Application
-   ))
-
-(define Endpoints
-  (Endpoint
-   "https://status.discordapp.com/api"
-   (string-append Endpoint-Status "scheduled-maintenances/")
-   (string-append Endpoint-Sm     "active.json")
-   (string-append Endpoint-Sm     "upcoming.json")
-
-   "https://discordapp.com/"
-   (string-append Endpoint-Discord "api/v" APIVersion "/")
-   (string-append Endpoint-API     "guilds/")
-   (string-append Endpoint-API     "channels/")
-   (string-append Endpoint-API     "users/")
-   (string-append Endpoint-API     "gateway")
-   (string-append Endpoint-Gateway "/bot")
-   (string-append Endpoint-API     "webhooks/")
-
-   "https://cdn.discordapp.com/"
-   (string-append Endpoint-CDN "attachments/")
-   (string-append Endpoint-CDN "avatars/")
-   (string-append Endpoint-CDN "icons/")
-   (string-append Endpoint-CDN "splashes/")
-   (string-append Endpoint-CDN "channel-icons/")
-
-   (string-append Endpoint-API  "auth/")
-   (string-append Endpoint-Auth "login")
-   (string-append Endpoint-Auth "logout")
-   (string-append Endpoint-Auth "verify")
-   (string-append Endpoint-Auth "verify/resend")
-   (string-append Endpoint-Auth "forgot")
-   (string-append Endpoint-Auth "reset")
-   (string-append Endpoint-Auth "register")
-
-   (string-append Endpoint-API   "/voice/")
-   (string-append Endpoint-Voice "regions")
-   (string-append Endpoint-Voice "ice")
-
-   (string-append Endpoint-API      "tutorial/")
-   (string-append Endpoint-Tutorial "indicators")
-
-   (string-append Endpoint-API "track")
-   (string-append Endpoint-API "sso")
-   (string-append Endpoint-API "report")
-   (string-append Endpoint-API "integrations")
-
-   (lambda(uID)     (string-append Endpoint-Users uID))
-   (lambda(uID aID) (string-append Endpoint-CDNAvatars uID "/" aID ".png"))
-   (lambda(uID aID) (string-append Endpoint-CDNAvatars uID "/" aID ".gif"))
-   (lambda(uID)     (string-append Endpoint-Users uID "/settings"))
-   (lambda(uID)     (string-append Endpoint-Users uID "/guilds"))
-   (lambda(uID gID) (string-append Endpoint-Users uID "/guilds/" gID))
-   (lambda(uID gID) (string-append Endpoint-Users uID "/guilds/" gID "/settings"))
-   (lambda(uID)     (string-append Endpoint-Users uID "/channels"))
-   (lambda(uID)     (string-append Endpoint-Users uID "/devices"))
-   (lambda(uID)     (string-append Endpoint-Users uID "/connections"))
-   (lambda(uID)     (string-append Endpoint-Users "@me/notes" uID))
-
-   (lambda(gID)         (string-append Endpoint-Guilds gID))
-   (lambda(gID)         (string-append Endpoint-Guilds gID "/invites"))
-   (lambda(gID)         (string-append Endpoint-Guilds gID "/channels"))
-   (lambda(gID)         (string-append Endpoint-Guilds gID "/members"))
-   (lambda(gID uID)     (string-append Endpoint-Guilds gID "/members/" uID))
-   (lambda(gID uID rID) (string-append Endpoint-Guilds gID "/members/" uID "/roles/" rID))
-   (lambda(gID)         (string-append Endpoint-Guilds gID "/bans"))
-   (lambda(gID uID)     (string-append Endpoint-Guilds gID "/bans/" uID))
-   (lambda(gID)         (string-append Endpoint-Guilds gID "/integrations"))
-   (lambda(gID iID)     (string-append Endpoint-Guilds gID "/integrations/" iID))
-   (lambda(gID iID)     (string-append Endpoint-Guilds gID "/integrations/" iID "/sync"))
-   (lambda(gID)         (string-append Endpoint-Guilds gID "/roles"))
-   (lambda(gID rID)     (string-append Endpoint-Guilds gID "/roles/" rID))
-   (lambda(gID)         (string-append Endpoint-Guilds gID "/invites"))
-   (lambda(gID)         (string-append Endpoint-Guilds gID "/embed"))
-   (lambda(gID)         (string-append Endpoint-Guilds gID "/prune"))
-   (lambda(gID hash)    (string-append Endpoint-CDNIcons gID "/" hash ".png"))
-   (lambda(gID hash)    (string-append Endpoint-CDNSplashes gID "/" hash ".png"))
-   (lambda(gID)         (string-append Endpoint-Guilds gID "/webhooks"))
-
-   (lambda(cID)     (string-append Endpoint-Channels cID))
-   (lambda(cID)     (string-append Endpoint-Channels cID "/permissions"))
-   (lambda(cID tID) (string-append Endpoint-Channels cID "/permissions/" tID))
-   (lambda(cID)     (string-append Endpoint-Channels cID "/invites"))
-   (lambda(cID)     (string-append Endpoint-Channels cID "/typing"))
-   (lambda(cID)     (string-append Endpoint-Channels cID "/messages"))
-   (lambda(cID mID) (string-append Endpoint-Channels cID "/messages/" mID))
-   (lambda(cID mID) (string-append Endpoint-Channels cID "/messages/" mID "/ack"))
-   (lambda(cID)     (string-append (Endpoint-Channel cID) "/messages/bulk_delete"))
-   (lambda(cID)     (string-append (Endpoint-Channel cID) "/pins"))
-   (lambda(cID mID) (string-append (Endpoint-Channel cID) "/pins/" mID))
-
-   (lambda(cID hash) (string-append Endpoint-CDNChannelIcons cID "/" hash ".png"))
-
-   (lambda(cID)       (string-append (Endpoint-Channel cID) "/webhooks"))
-   (lambda(wID)       (string-append Endpoint-Webhooks wID))
-   (lambda(wID token) (string-append Endpoint-Webhooks wID "/" token))
-
-   (lambda(cID mID)
-     (string-append (Endpoint-ChannelMessage cID mID) "/reactions"))
-   (lambda(cID mID eID)
-     (string-append (Endpoint-ChannelMessage cID mID) "/reactions" eID))
-   (lambda(cID mID eID uID)
-     (string-append (Endpoint-MessageReactions cID mID eID) "/" uID))
-
-   (lambda()    (string-append Endpoint-Users "@me" "/relationships"))
-   (lambda(uID) (string-append (Endpoint-Relationships) "/" uID))
-   (lambda(uID) (string-append Endpoint-Users uID "/relationships"))
-
-   (lambda(iID) (string-append Endpoint-API "invite/" iID))
-
-   (lambda(iID) (string-append Endpoint-API "integrations/" iID "/join"))
-
-   (lambda(eID) (string-append Endpoint-API "emojis/" eID ".png"))
-
-   (string-append Endpoint-API    "oauth2/")
-   (string-append Endpoint-Oauth2 "applications")
-   (lambda(aID) (string-append Endpoint-Applications "/" aID))
-   (lambda(aID) (string-append Endpoint-Applications "/" aID "/bot"))
-   ))
+(define EndpointOauth2                           (string-append EndpointAPI "oauth2/"))
+(define EndpointApplications                     (string-append EndpointOauth2 "applications"))
+(define (EndpointApplicationsBot aID)            (string-append EndpointApplications "/" aID "/bot"))
+(define (EndpointApplication aID)                (string-append EndpointApplications "/" aID))
