@@ -1,6 +1,9 @@
 #lang racket/base
 
-(require "endpoints.rkt")
+(require
+  racket/string
+  
+  "endpoints.rkt")
 
 (struct User
   (ID
