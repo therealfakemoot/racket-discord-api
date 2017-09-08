@@ -1,41 +1,6 @@
 #lang racket/base
 
-(provide EndpointStatus EndpointSm EndpointSmActive EndpointSmUpcoming)
-(provide EndpointDiscord EndpointAPI EndpointGuilds EndpointChannels
-         EndpointUsers EndpointGateway EndpointGatewayBot EndpointWebhooks)
-(provide EndpointCDN EndpointCDNAttachments EndpointCDNAvatars EndpointCDNIcons
-         EndpointCDNSplashes EndpointCDNChannelIcons)
-(provide EndpointAuth EndpointLogin EndpointLogout EndpointVerify
-         EndpointVerifyResend EndpointForgotPassword EndpointResetPassword
-         EndpointRegister)
-(provide EndpointVoice EndpointVoiceRegions EndpointVoiceIce)
-(provide EndpointTutorial EndpointTutorialIndicators)
-(provide EndpointTrack EndpointSso EndpointReport EndpointIntegrations)
-(provide EndpointUser EndpointUserAvatar EndpointUserAvatarAnimated
-         EndpointUserSettings EndpointUserGuild EndpointUserGuilds
-         EndpointUserGuildSettings EndpointUserChannels EndpointUserDevices
-         EndpointUserConnections EndpointUserNotes)
-(provide EndpointGuild EndpointGuildChannels EndpointGuildMember
-         EndpointGuildMembers EndpointGuildMemberRole EndpointGuildBan
-         EndpointGuildBans EndpointGuildIntegration EndpointGuildIntegrations
-         EndpointGuildIntegrationSync EndpointGuildRole EndpointGuildRoles
-         EndpointGuildInvites EndpointGuildEmbed EndpointGuildPrune
-         EndpointGuildIcon EndpointGuildSplash EndpointGuildWebhooks)
-(provide EndpointChannel EndpointChannelPermission EndpointChannelPermissions
-         EndpointChannelInvites EndpointChannelTyping EndpointChannelMessage
-         EndpointChannelMessages EndpointChannelMessageAck
-         EndpointChannelMessagesBulkDelete EndpointChannelMessagePin
-         EndpointChannelMessagesPins EndpointChannelWebhooks)
-(provide EndpointGroupIcon)
-(provide EndpointWebhook EndpointWebhookToken)
-(provide EndpointMessageReactionsAll EndpointMessageReactions
-         EndpointMessageReaction)
-(provide EndpointRelationships EndpointRelationshipsMutual EndpointRelationship)
-(provide EndpointInvite)
-(provide EndpointIntegrationsJoin)
-(provide EndpointEmoji)
-(provide EndpointOauth2 EndpointApplications EndpointApplicationsBot
-         EndpointApplication)
+(provide (all-defined-out))
 
 (define APIVersion "6")
 

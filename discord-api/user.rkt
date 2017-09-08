@@ -20,7 +20,6 @@
   (string-append "<@" User-ID ">"))
 
 (define (AvatarURL size)
-  (define URL "")
   (cond
     [(string-prefix? User-Avatar "a_")
      (let ([URL (EndpointUserAvatarAnimated User-ID User-Avatar)]) URL)]
